@@ -5,6 +5,7 @@ export default function Write() {
     <div>
       <p>write</p>
       <p>test</p>
+      <p>test1</p>
     </div>
   )
 }
