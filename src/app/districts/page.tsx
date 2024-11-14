@@ -1,94 +1,103 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
-import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material'
-import { useEffect, useState } from 'react'
-import Checkbox from '@mui/material/Checkbox'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from '@mui/material'
+import { Sheet } from '@mui/joy'
 
-interface Comment {
-  id: number
-  title: string
-  userId: number
-  createdAt: string
-}
-
-export default function Districts() {
-  const searchParams = useSearchParams()
+export default function Main() {
   const router = useRouter()
-  const districtName = searchParams.get('districtName')
-  // const [commentArray, setCommentArray] = useState([])
-  const [commentArray, setCommentArray] = useState<Comment[]>([])
+  const district = [
+    '강남구',
+    '강동구',
+    '강북구',
+    '강서구',
+    '관악구',
+    '광진구',
+    '구로구',
+    '금천구',
+    '노원구',
+    '도봉구',
+    '동대문구',
+    '동작구',
+    '마포구',
+    '서대문구',
+    '서초구',
+    '성동구',
+    '성북구',
+    '송파구',
+    '양천구',
+    '영등포구',
+    '용산구',
+    '은평구',
+    '종로구',
+    '중구',
+    '중랑구',
+  ]
 
-  useEffect(() => {
-    fetch('https://koreanjson.com/posts', {
-      method: 'GET', //GET method는 기본값이라서 생략이 가능합니다.
-    })
-      .then((res) => res.json())
+  const [checkedState, setCheckedState] = useState<Record<string, boolean>>(
+    district.reduce((acc, name) => {
+      acc[name] = false
+      return acc
+    }, {} as Record<string, boolean>)
+  )
 
-      .then((data) => {
-        setCommentArray(data)
-        console.log(data)
-      })
-  }, [])
-
-  const handleSubmit = () => {
-    alert('삭제하시겠습니까?')
+  const handleCheckboxChange = (name: string) => {
+    setCheckedState((prevState) => ({
+      ...prevState,
+      [name]: !prevState[name],
+    }))
   }
 
-  // 쿼리스트링에서 전달받은 구 이름들을 배열로 변환
-  const selectedDistricts = typeof districtName === 'string' ? districtName.split(',') : []
+  const handleSubmit = () => {
+    const selectedDistricts = Object.keys(checkedState).filter((name) => checkedState[name])
+    console.log(selectedDistricts)
+
+    const query = selectedDistricts.map(encodeURIComponent).join(',')
+    console.log(query)
+
+    router.push(`/districts/list?districtName=${query}`)
+  }
 
   return (
-    <Box sx={{ padding: '20px' }}>
-      {selectedDistricts.map((district) => (
-        <Box key={district} sx={{ marginBottom: 4 }}>
-          <Typography variant="h5">{district}</Typography>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ display: 'hidden' }}>
-                  {/* <Checkbox
-                    color="primary"
-                    // checked={isItemSelected}
-                    inputProps={
-                      {
-                        // 'aria-labelledby': labelId,
-                      }
-                    }
-                    sx={{ display: 'none' }}
-                  /> */}
-                  체크
-                </TableCell>
-                <TableCell>제목</TableCell>
-                <TableCell>작성자</TableCell>
-                <TableCell>시간</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {/* API 데이터(commentArray)로 테이블 행을 생성 */}
-              {commentArray.map((comment) => (
-                <TableRow key={comment.id}>
-                  <TableCell>
-                    <Checkbox color="primary" />
-                  </TableCell>
-                  <TableCell>{comment.title || '제목 없음'}</TableCell>
-                  <TableCell>{comment.userId || '작성자 없음'}</TableCell>
-                  <TableCell>{new Date(comment.createdAt).toLocaleDateString() || '시간 없음'}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
-      ))}
+    <Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Sheet
+          variant="outlined"
+          sx={{
+            width: '70rem',
+            maxHeight: 400,
+            overflowY: 'auto',
+            padding: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            flexWrap: 'wrap',
+            alignContent: 'space-around',
+          }}
+        >
+          {district.map((name) => (
+            <FormControlLabel
+              key={name}
+              control={<Checkbox checked={checkedState[name]} onChange={() => handleCheckboxChange(name)} />}
+              label={name}
+            />
+          ))}
+        </Sheet>
+      </Box>
       <Button variant="contained" sx={{ marginTop: '20px' }} onClick={handleSubmit}>
-        삭제
-      </Button>
-      <Button variant="contained" sx={{ marginTop: '20px' }} onClick={handleSubmit}>
-        수정
-      </Button>
-      <Button variant="contained" sx={{ marginTop: '20px' }} onClick={() => router.push(`/${districtName}/write`)}>
-        글쓰기
+        확인하기
       </Button>
     </Box>
   )

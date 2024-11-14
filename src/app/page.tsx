@@ -52,7 +52,7 @@ export default function Home() {
         variant="contained"
         disableElevation
         sx={{ width: '300px', marginTop: '50px' }}
-        onClick={() => router.push('/main')}
+        onClick={() => router.push('/districts')}
       >
         로그인
       </Button>
