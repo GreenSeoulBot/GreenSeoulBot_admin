@@ -3,13 +3,11 @@ from db import models, schemas
 
 
 # 데이터 생성하기
-def create_policy(db: Session, policy: schemas.PolicyCreate):
-
-    # SQLAlchemy 모델 인스턴스 만들기
-    db_policy = models.Policy(district_name=policy.district_name, contents=policy.contents)
-    db.add(db_policy)  # DB에 해당 인스턴스 추가하기
-    db.commit()  # DB의 변경 사항 저장하기
-    db.refresh(db_policy)  # 생성된 ID와 같은 DB의 새 데이터를 포함하도록 새로고침
+def create_policy(db: Session, district_name: str, contents: str, policy: schemas.PolicyCreate):
+    db_policy = models.Policy(district_name=district_name, contents=contents)
+    db.add(db_policy)
+    db.commit() 
+    db.refresh(db_policy) 
     return db_policy
 
 def update_policy(db: Session, district_name: str, policy_update: schemas.PolicyUpdate):
@@ -24,6 +22,20 @@ def update_policy(db: Session, district_name: str, policy_update: schemas.Policy
     db.commit()
     db.refresh(db_policy)
     return db_policy
+
+def update_policy_content(db: Session, new_district_name: str, new_contents: str):
+
+    # db_policy = db.query(models.Policy).filter(models.Policy.district_name == district_name).first()
+    
+    # if db_policy is None:
+    #     return None
+    db_policy.district_name = new_district_name
+    db_policy.contents = new_contents
+    db.commit()  
+    db.refresh(db_policy) 
+    
+    return db_policy
+
 
 
 # 데이터 읽기 - 여러 항목 읽어오기
