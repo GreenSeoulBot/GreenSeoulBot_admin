@@ -1,7 +1,7 @@
 # Green Seoul Bot Admin API
 
 `Green Seoul Bot`프로젝트의 관리자 페이지 기능을 제공합니다. <br>
-FastAPI를 기반으로 하며, 관리자 로그인 후 정책 정보 관리 기능(조회, 추가, 수정, 삭제) 구현되었습니다. 
+FastAPI를 기반으로 하며, 관리자 로그인 후 정책 정보 관리 기능(조회, 추가, 수정, 삭제)이 구현되었습니다. 
 
 ## Requirements
 
