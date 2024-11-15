@@ -10,6 +10,7 @@ def create_policy(db: Session, district_name: str, contents: str, policy: schema
     db.refresh(db_policy) 
     return db_policy
 
+# 수정
 def update_policy(db: Session, district_name: str, policy_update: schemas.PolicyUpdate):
     db_policy = db.query(models.Policy).filter(models.Policy.district_name == district_name).first()
     if db_policy is None:
@@ -23,25 +24,19 @@ def update_policy(db: Session, district_name: str, policy_update: schemas.Policy
     db.refresh(db_policy)
     return db_policy
 
+# 추가
 def update_policy_content(db: Session, new_district_name: str, new_contents: str):
 
-    # db_policy = db.query(models.Policy).filter(models.Policy.district_name == district_name).first()
-    
-    # if db_policy is None:
-    #     return None
-    db_policy.district_name = new_district_name
-    db_policy.contents = new_contents
+    db_policy = models.Policy(district_name=new_district_name, contents=new_contents)
+    db.add(db_policy)
+
     db.commit()  
     db.refresh(db_policy) 
     
     return db_policy
 
 
-
-# 데이터 읽기 - 여러 항목 읽어오기
-def get_policies(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Policy).offset(skip).limit(limit).all()
-
+# 삭제
 def delete_policy(db: Session, district_name: str):
     db_policy = db.query(models.Policy).filter(models.Policy.district_name == district_name).first()
     if db_policy is None:
