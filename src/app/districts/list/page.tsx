@@ -28,16 +28,20 @@ export default function Districts() {
 
       .then((data) => {
         setCommentArray(data)
-        console.log(data)
       })
   }, [])
 
-  const boardDetail = (id: number) => {
-    router.push(`/districts/detail?districtName=${districtName}/${id}`)
-  }
-
   // 쿼리스트링에서 전달받은 구 이름들을 배열로 변환
   const selectedDistricts = typeof districtName === 'string' ? districtName.split(',') : []
+  console.log(selectedDistricts)
+
+  // const query = selectedDistricts.map(encodeURIComponent).join(',')
+  const query = selectedDistricts[0]
+  console.log(query)
+
+  const boardDetail = (id: number) => {
+    router.push(`/districts/${query}/detail?id=${id}&districtName=${query}`)
+  }
 
   return (
     <Box sx={{ padding: '20px' }}>

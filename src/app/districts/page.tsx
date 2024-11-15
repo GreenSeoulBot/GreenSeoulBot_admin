@@ -54,6 +54,13 @@ export default function Main() {
   )
 
   const handleCheckboxChange = (name: string) => {
+    const selectedCount = Object.values(checkedState).filter((isChecked) => isChecked).length
+
+    if (selectedCount >= 1 && !checkedState[name]) {
+      alert('1개만 선택할 수 있습니다.')
+      return
+    }
+
     setCheckedState((prevState) => ({
       ...prevState,
       [name]: !prevState[name],
